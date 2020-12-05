@@ -1,5 +1,5 @@
 const pool = require('./pool');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 
 // Api Funcrion Call ---------------------------------------------------
 function User() {};
@@ -18,6 +18,23 @@ User.prototype = {
             }
         });
     },
+
+
+
+        // Add Image
+
+        AddImage : function(body, id, callback){
+            
+            // prepare the sql querys
+            let sql = `UPDATE user SET img_url = ? WHERE id = ?`;
+            let data = [body.img_url, id];
+            // call the query give it the sql string and the values (bind array)
+            pool.query(sql, data, function(err, result) {
+                if(err) throw err;
+                // return the last inserted id. if there is no error
+                callback(result);
+            });
+        },
 
     //Get an user
 
@@ -41,10 +58,10 @@ User.prototype = {
         // Hash the password before insert it into the database.
         // body.password = bcrypt.hashSync(pwd,10);
         // prepare the sql querys
-        let sql = `INSERT INTO user(fullname, email, phone, password, reg_no, user_role, academic_from, academic_to, company, address, approved)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        let sql = `INSERT INTO user(fullname, email, phone, password, reg_no, user_role, academic_from, academic_to, company, designation, address, approved)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         // call the query give it the sql string and the values (bind array)
-        pool.query(sql, [body.fullname,body.email,body.phone,body.password,body.reg_no,body.user_role,body.academic_from,body.academic_to,body.company,body.address,body.approved], function(err, result) {
+        pool.query(sql, [body.fullname,body.email,body.phone,body.password,body.reg_no,body.user_role,body.academic_from,body.academic_to,body.company, body.designation, body.address,body.approved], function(err, result) {
             if(err) throw err;
             // return the last inserted id. if there is no error
             callback(result);
@@ -57,8 +74,23 @@ User.prototype = {
 
         // prepare the sql querys
         let sql = `UPDATE user SET fullname = ?,phone = ?, email = ?,password = ?,reg_no = ?,user_role = ?,academic_from = ?,
-                  academic_to = ?, company = ?, address = ?, approved = ? WHERE id = ?`;
-        let data = [body.fullname,body.phone,body.email,body.password,body.reg_no,body.user_role,body.academic_from,body.academic_to,body.company,body.address,body.approved, id];
+                  academic_to = ?, company = ?, designation = ?, address = ?, approved = ? WHERE id = ?`;
+        let data = [body.fullname,body.phone,body.email,body.password,body.reg_no,body.user_role,body.academic_from,body.academic_to,body.company,body.designation,body.address,body.approved, id];
+        // call the query give it the sql string and the values (bind array)
+        pool.query(sql, data, function(err, result) {
+            if(err) throw err;
+            // return the last inserted id. if there is no error
+            callback(result);
+        });
+    },
+
+    // Update Password
+
+    Updatepassword : function(body, id, callback){
+
+        // prepare the sql querys
+        let sql = `UPDATE user SET password = ? WHERE id = ?`;
+        let data = [body.password, id];
         // call the query give it the sql string and the values (bind array)
         pool.query(sql, data, function(err, result) {
             if(err) throw err;
